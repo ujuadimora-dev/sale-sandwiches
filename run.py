@@ -1,7 +1,5 @@
-import gspread
+import gspread 
 from google.oauth2.service_account import Credentials
-
-
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -15,9 +13,14 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 
 SHEET = GSPREAD_CLIENT.open('love_sandwiches')
 
+
+
 def get_sales_data():
     """
     Get sales figures input from the user.
+    Run a while loop to collect a valid string of data from the user
+    via the terminal, which must be a string of 6 numbers separated
+    by commas. The loop will repeatedly request data, until it is valid.
     """
     while True:
         print("Please enter sales data from the last market.")
@@ -54,8 +57,6 @@ def validate_data(values):
     return True
 
 
-
-
 def update_worksheet(data, worksheet):
     """
     Receives a list of integers to be inserted into a worksheet
@@ -77,13 +78,14 @@ def calculate_surplus_data(sales_row):
     print("Calculating surplus data...\n")
     stock = SHEET.worksheet("stock").get_all_values()
     stock_row = stock[-1]
-    
+
     surplus_data = []
     for stock, sales in zip(stock_row, sales_row):
         surplus = int(stock) - sales
         surplus_data.append(surplus)
 
     return surplus_data
+
 
 def get_last_5_entries_sales():
     """
@@ -99,6 +101,7 @@ def get_last_5_entries_sales():
         columns.append(column[-5:])
 
     return columns
+
 
 def calculate_stock_data(data):
     """
@@ -128,9 +131,6 @@ def main():
     sales_columns = get_last_5_entries_sales()
     stock_data = calculate_stock_data(sales_columns)
     update_worksheet(stock_data, "stock")
-    #print(stock_data)
-    update_worksheet(stock_data, "stock")
-
 
 
 print("Welcome to Love Sandwiches Data Automation")
